@@ -17,7 +17,9 @@ const PASSWORD = `12345678`;
 const RINKEBY = 'Rinkeby Test Network';
 
 const QR_SCANNER_ICON = 'qr_scanner_button';
-const ACCOUNT_APPROVAL_MODAL = 'account-approval-modal-container'
+const ACCOUNT_APPROVAL_MODAL = 'account-approval-modal-container';
+const SIGNATURE_MODAL = 'signature-modal-window';
+const SIGNATURE_CONFIRM_BUTTON = 'request-signature-confirm-button';
 
 describe('Wallet Tests', () => {
   beforeEach(() => {
@@ -89,19 +91,19 @@ describe('Wallet Tests', () => {
     await TestHelpers.waitAndTapByText('Confirm', 50000);
 
   // 2nd of 5 transactions
-    await TestHelpers.checkIfVisible('signature-modal-window');
-    await TestHelpers.swipe('signature-modal-window', 'up', 'fast');
-    await TestHelpers.waitAndTap('request-signature-confirm-button');
+    await TestHelpers.checkIfVisible(SIGNATURE_MODAL);
+    await TestHelpers.swipe(SIGNATURE_MODAL, 'up', 'fast');
+    await TestHelpers.waitAndTap(SIGNATURE_CONFIRM_BUTTON);
 
   // 3rd of 5 transactions
-    await TestHelpers.checkIfVisible('signature-modal-window');
-    await TestHelpers.swipe('signature-modal-window', 'up', 'fast');
-    await TestHelpers.waitAndTap('request-signature-confirm-button');
+    await TestHelpers.checkIfVisible(SIGNATURE_MODAL);
+    await TestHelpers.swipe(SIGNATURE_MODAL, 'up', 'fast');
+    await TestHelpers.waitAndTap(SIGNATURE_CONFIRM_BUTTON);
 
   // 4th of 5 transactions
-    await TestHelpers.checkIfVisible('signature-modal-window');
-    await TestHelpers.swipe('signature-modal-window', 'up', 'fast');
-    await TestHelpers.waitAndTap('request-signature-confirm-button');
+    await TestHelpers.checkIfVisible(SIGNATURE_MODAL);
+    await TestHelpers.swipe(SIGNATURE_MODAL, 'up', 'fast');
+    await TestHelpers.waitAndTap(SIGNATURE_CONFIRM_BUTTON);
 
   // 5th last transactions of api-tests
     await TestHelpers.delay(15000);
