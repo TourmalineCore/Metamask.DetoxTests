@@ -9,6 +9,7 @@ jasmine.getEnv().addReporter(adapter);
 beforeAll(async () => {
   await detox.init(config);
   await device.launchApp();
+  await device.enableSynchronization();
 });
 
 beforeEach(async () => {
@@ -18,5 +19,5 @@ beforeEach(async () => {
 afterAll(async () => {
   await adapter.afterAll();
   await detox.cleanup();
-  jest.setTimeout(3000);
+  jest.setTimeout(2250000);
 });
