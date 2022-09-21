@@ -120,18 +120,6 @@ prebuild(){
 	fi
 }
 
-prebuild_ios(){
-	prebuild
-	# Generate xcconfig files for CircleCI
-	if [ "$PRE_RELEASE" = true ] ; then
-		echo "" > ios/debug.xcconfig
-		echo "" > ios/release.xcconfig
-	fi
-	# Required to install mixpanel dep
-	git submodule update --init --recursive
-	unset PREFIX
-}
-
 prebuild_android(){
 	adb kill-server
 	adb start-server
@@ -156,75 +144,14 @@ buildAndroidRun(){
 
 buildAndroidRunE2E(){
 	prebuild_android
+	echo $ANDROID_ENV_FILE
+
 	if [ -e $ANDROID_ENV_FILE ]
 	then
 		source $ANDROID_ENV_FILE
 	fi
-	cd android && ./gradlew assembleAndroidTest -PminSdkVersion=26 -DtestBuildType=debug && cd ..
+	cd android && ./gradlew assembleDebug app:assembleAndroidTest -DtestBuildType=debug && cd ..
 	react-native run-android
-}
-
-buildIosSimulator(){
-	prebuild_ios
-	SIM="${IOS_SIMULATOR:-"iPhone 11 Pro"}"
-	react-native run-ios --simulator "$SIM"
-}
-
-buildIosSimulatorE2E(){
-	prebuild_ios
-	cd ios && xcodebuild -workspace MetaMask.xcworkspace -scheme MetaMask -configuration Debug -sdk iphonesimulator -derivedDataPath build
-}
-
-buildIosDevice(){
-	prebuild_ios
-	react-native run-ios --device
-}
-
-generateArchivePackages() {
-	xcodebuild -workspace MetaMask.xcworkspace -scheme MetaMask -configuration Release COMIPLER_INDEX_STORE_ENABLE=NO archive -archivePath build/MetaMask.xcarchive -destination generic/platform=ios && xcodebuild -exportArchive -archivePath build/MetaMask.xcarchive -exportPath build/output -exportOptionsPlist MetaMask/IosExportOpitions.plist
-}
-
-buildIosRelease(){
-	prebuild_ios
-
-	# Replace release.xcconfig with ENV vars
-	if [ "$PRE_RELEASE" = true ] ; then
-		echo "Setting up env vars...";
-		echo "$IOS_ENV" | tr "|" "\n" > $IOS_ENV_FILE
-		echo "Build started..."
-		brew install watchman
-		cd ios
-		generateArchivePackages
-		# Generate sourcemaps
-		yarn sourcemaps:ios
-	else
-		if [ ! -f "ios/release.xcconfig" ] ; then
-			echo "$IOS_ENV" | tr "|" "\n" > ios/release.xcconfig
-		fi
-		./node_modules/.bin/react-native run-ios  --configuration Release --simulator "iPhone 11 Pro"
-	fi
-}
-
-buildIosReleaseE2E(){
-	prebuild_ios
-
-	# Replace release.xcconfig with ENV vars
-	if [ "$PRE_RELEASE" = true ] ; then
-		echo "Setting up env vars...";
-		echo "$IOS_ENV" | tr "|" "\n" > $IOS_ENV_FILE
-		echo "Pre-release E2E Build started..."
-		brew install watchman
-		cd ios 
-		generateArchivePackages 
-		# Generate sourcemaps
-		yarn sourcemaps:ios
-	else
-		echo "Release E2E Build started..."
-		if [ ! -f "ios/release.xcconfig" ] ; then
-			echo "$IOS_ENV" | tr "|" "\n" > ios/release.xcconfig
-		fi
-		cd ios && xcodebuild -workspace MetaMask.xcworkspace -scheme MetaMask -configuration Release -sdk iphonesimulator -derivedDataPath build
-	fi
 }
 
 buildAndroidRelease(){
@@ -267,22 +194,6 @@ buildAndroid() {
 		buildAndroidRunE2E
 	else
 		buildAndroidRun
-	fi
-}
-
-buildIos() {
-	if [ "$MODE" == "release" ] ; then
-		buildIosRelease
-	elif [ "$MODE" == "releaseE2E" ] ; then
-		buildIosReleaseE2E
-	elif [ "$MODE" == "debugE2E" ] ; then
-		buildIosSimulatorE2E
-	else
-		if [ "$RUN_DEVICE" = true ] ; then
-			buildIosDevice
-		else
-			buildIosSimulator
-		fi
 	fi
 }
 
