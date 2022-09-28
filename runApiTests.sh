@@ -3,9 +3,11 @@ APITEST_DIRECTORY="$HOME/Documents/nindao-api-tests"
 
 DOWNLOADS_DIRECTORY="$APITEST_DIRECTORY/cypress/downloads"
 TEST_DIRECTORY="$APITEST_DIRECTORY/test"
-#clear
+
+# move file with session in to api-test directory
 cd $DOWNLOADS_DIRECTORY
 mv sessionData.txt $TEST_DIRECTORY
 
+# run api-tests
 cd $APITEST_DIRECTORY 
 npm test

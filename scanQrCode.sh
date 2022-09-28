@@ -10,6 +10,6 @@ rm custom.png
 cd $CYPRESS_DIRECTORY/cypress/screenshots/login.spec.cy.js
 rm qrcode.png
 
-# make a screenshot of qrcode by cypress
+# make qrcode screenshot by cypress
 cd $CYPRESS_DIRECTORY
 npx cypress run --headless --browser chrome
