@@ -49,7 +49,10 @@
     "stacktrace:ios": "stack-beautifier sourcemaps/ios/index.js.map -t sourcemaps/trace.txt",
     "update-changelog": "./scripts/auto-changelog.sh",
     "prestorybook": "rnstl",
-    "create-release": "./scripts/set-versions.sh && yarn update-changelog"
+    "create-release": "./scripts/set-versions.sh && yarn update-changelog",
+    "run-api": "cd $HOME/Documents/nindao-api-service && yarn start:dev",
+    "run-ui": "cd $HOME/Documents/nindao-api-tests/dao-service-stub && npm start",
+    "all-for-tests": "npm-run-all --parallel run-api run-ui"
   },
   "husky": {
     "hooks": {
