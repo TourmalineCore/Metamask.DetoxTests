@@ -990,7 +990,7 @@ export function getWalletNavbarOptions(
     headerRight: () => (
       <TouchableOpacity
         style={styles.infoButton}
-        testID='qr_scanner_button'
+        testID='open-qr-scanner'
         // eslint-disable-next-line
         onPress={openQRScanner}
       >

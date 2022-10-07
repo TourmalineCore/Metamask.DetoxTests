@@ -7,7 +7,7 @@ export const LOGIN_PASSWORD_ERROR = 'invalid-password-error';
 export const RESET_WALLET_ID = 'reset-wallet-button';
 
 export const ACCOUNT_APROVAL_MODAL_CONTAINER_ID =
-  'account-approval-modal-container';
+  'account-approval-modal';
 export const CANCEL_BUTTON_ID = 'connect-cancel-button';
 export const CONNECT_BUTTON_ID = 'connect-approve-button';
 
