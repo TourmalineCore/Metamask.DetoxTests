@@ -15,19 +15,26 @@ const SECRET_RECOVERY_PHRASE =
   'green bike caught dragon medal wild region jaguar unusual sleep exile debate';
 const PASSWORD = `12345678`;
 const RINKEBY = 'Rinkeby Test Network';
-
 const QR_SCANNER_ICON = 'qr_scanner_button';
-const ACCOUNT_APPROVAL_MODAL = 'account-approval-modal-container';
-const SIGNATURE_MODAL = 'signature-modal-window';
-const SIGNATURE_CONFIRM_BUTTON = 'request-signature-confirm-button';
+const ACCOUNT_APPROVAL_MODAL = 'account-approval-modal-container'
 
 describe('Wallet Tests', () => {
+  beforeAll(() => {
+    exec('./scripts/kill.sh');
+  })
+  
   beforeEach(() => {
     jest.setTimeout(200000);
   });
 
+  afterAll(() => {
+    exec('./scripts/kill.sh');
+  })
+
   it('should tap on import seed phrase button', async () => {
-    exec('sh ./scanQrCode.sh');
+    exec('./scripts/prepare-services.sh')
+
+    exec('./scripts/scan-qr-code.sh');
 
     await OnboardingCarouselView.isVisible();
     await OnboardingCarouselView.tapOnGetStartedButton();
@@ -68,10 +75,13 @@ describe('Wallet Tests', () => {
   
     await NetworkEducationModal.isVisible();
     await NetworkEducationModal.isNetworkNameCorrect('Rinkeby Testnet');
-  
+
+    await TestHelpers.delay(3000); 
+
+    await NetworkEducationModal.isVisible();
     await NetworkEducationModal.tapGotItButton();
     await NetworkEducationModal.isNotVisible();
-  })
+  });
 
   it('scan qr code and get session', async () => {
     await TestHelpers.tap(QR_SCANNER_ICON);
@@ -83,29 +93,28 @@ describe('Wallet Tests', () => {
   it('confirm and sign transactions, created by api tests', async () => {
 
     TestHelpers.delay(5000);
-    // execute script that launch api-tests
-    exec('sh ./runApiTests.sh');
+    exec('./scripts/start-api.sh');
 
-  // 1st of 5 transactions
+    // 1st of 5 transactions
     await TestHelpers.delay(5000);
     await TestHelpers.waitAndTapByText('Confirm', 50000);
 
-  // 2nd of 5 transactions
-    await TestHelpers.checkIfVisible(SIGNATURE_MODAL);
-    await TestHelpers.swipe(SIGNATURE_MODAL, 'up', 'fast');
-    await TestHelpers.waitAndTap(SIGNATURE_CONFIRM_BUTTON);
+    // 2nd of 5 transactions
+    await TestHelpers.checkIfVisible('signature-modal-window');
+    await TestHelpers.swipe('signature-modal-window', 'up', 'fast');
+    await TestHelpers.waitAndTap('request-signature-confirm-button');
 
   // 3rd of 5 transactions
-    await TestHelpers.checkIfVisible(SIGNATURE_MODAL);
-    await TestHelpers.swipe(SIGNATURE_MODAL, 'up', 'fast');
-    await TestHelpers.waitAndTap(SIGNATURE_CONFIRM_BUTTON);
+    await TestHelpers.checkIfVisible('signature-modal-window');
+    await TestHelpers.swipe('signature-modal-window', 'up', 'fast');
+    await TestHelpers.waitAndTap('request-signature-confirm-button');
 
   // 4th of 5 transactions
-    await TestHelpers.checkIfVisible(SIGNATURE_MODAL);
-    await TestHelpers.swipe(SIGNATURE_MODAL, 'up', 'fast');
-    await TestHelpers.waitAndTap(SIGNATURE_CONFIRM_BUTTON);
+    await TestHelpers.checkIfVisible('signature-modal-window');
+    await TestHelpers.swipe('signature-modal-window', 'up', 'fast');
+    await TestHelpers.waitAndTap('request-signature-confirm-button');
 
-  // 5th last transactions of api-tests
+  // 5th last transactions
     await TestHelpers.delay(15000);
     await TestHelpers.waitAndTapByText('Confirm', 50000);
   });
